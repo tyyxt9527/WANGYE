@@ -99,12 +99,51 @@
       color: #6f5a42;
     }
 
+    /* 分区标题 */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #b45309;
+      margin: 2rem 0 1.5rem;
+      padding-left: 1rem;
+      border-left: 6px solid #d97706;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title span {
+      background: #f1e3d4;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      color: #7b491f;
+    }
+
     /* 网格卡片 - 针对一寸照优化布局 */
     .graduates-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
       gap: 2rem;
-      margin: 2rem 0 3rem;
+      margin: 1rem 0 2rem;
+    }
+
+    /* 优秀毕业生标兵特殊卡片（可容纳更多奖项） */
+    .card.elite-card {
+      background: linear-gradient(145deg, #ffffff, #fef9f0);
+      border: 1px solid #e8c9a7;
+      box-shadow: 0 20px 35px -12px rgba(160, 100, 30, 0.15);
+    }
+    .card.elite-card .honor-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+    }
+    .card.elite-card .honor-tag {
+      font-size: 0.7rem;
+      padding: 0.3rem 0.6rem;
+      white-space: normal;
+      word-break: break-word;
+      text-align: center;
     }
 
     .card {
@@ -125,7 +164,7 @@
       border-color: #cd9f6e;
     }
 
-    /* 照片区域 - 适应一寸照尺寸（竖版，比例约2:3，宽度缩小突出内容） */
+    /* 照片区域 - 适应一寸照尺寸 */
     .card-photo {
       background-color: #e2d5c4;
       position: relative;
@@ -135,10 +174,9 @@
       padding: 1.5rem 1.5rem 0.8rem 1.5rem;
     }
 
-    /* 照片容器 —— 专为一寸照优化：采用圆形或优雅的圆角矩形，高度自适应 */
     .photo-wrapper {
       width: 110px;
-      height: 140px;        /* 约为一寸照比例 25mmx35mm → 110x154，取110x140接近 */
+      height: 140px;
       border-radius: 16px;
       overflow: hidden;
       background: #fff0e0;
@@ -150,7 +188,6 @@
       transition: all 0.2s ease;
     }
 
-    /* 保持一寸照比例，照片完整填充 */
     .student-img {
       width: 100%;
       height: 100%;
@@ -163,7 +200,6 @@
       transform: scale(1.02);
     }
 
-    /* 占位符样式匹配照片区域大小 */
     .no-photo-placeholder {
       width: 100%;
       height: 100%;
@@ -185,7 +221,6 @@
       border-radius: 30px;
     }
 
-    /* 卡片内容区，让文字更紧凑 */
     .card-content {
       padding: 0.8rem 1.5rem 1.8rem;
       flex: 1;
@@ -224,7 +259,7 @@
       border-radius: 20px;
       font-size: 0.65rem;
       font-weight: 600;
-      margin: 0.3rem 0.3rem 0.3rem 0;
+      margin: 0.2rem 0.2rem;
     }
 
     .honor-list {
@@ -317,6 +352,9 @@
       .graduate-name {
         font-size: 1.3rem;
       }
+      .card.elite-card .honor-list {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -325,7 +363,7 @@
   <!-- 头部区域 -->
   <div class="hero">
     <h1>🏗️ 梅品五匠 · 鲁班传人 🧱</h1>
-    <div class="sub">建筑工程施工专业 · 2314班 49名优秀毕业生荣耀特辑</div>
+    <div class="sub">建筑工程施工专业 · 2314班 49名毕业生荣耀特辑</div>
     <div class="class-badge">
       <span>📐 建筑工程施工专业 2314班</span>
       <span>🎓 2026届 优秀毕业生</span>
@@ -353,8 +391,19 @@
     </div>
   </div>
 
-  <!-- 49名毕业生独立卡片展示区域，由JS动态生成（布局已按照一寸照优化） -->
-  <div class="graduates-grid" id="graduatesGrid"></div>
+  <!-- 优秀毕业生标兵区域（前12人，奖项可容纳十余项） -->
+  <div class="section-title">
+    🌟 优秀毕业生标兵 · 卓越榜样 🌟
+    <span>12人 · 国家级/省级荣誉多项</span>
+  </div>
+  <div class="graduates-grid" id="eliteGrid"></div>
+
+  <!-- 班级优秀毕业生区域（其余37人） -->
+  <div class="section-title">
+    🧱 班级优秀毕业生 · 匠心传承 🧱
+    <span>37人 · 全员优秀</span>
+  </div>
+  <div class="graduates-grid" id="normalGrid"></div>
 
   <!-- 班级风采 -->
   <div class="class-spirit">
@@ -385,23 +434,99 @@
 
 <script>
   // ============================================================
-  // 49名优秀毕业生完整数据（每人独立配置）
-  // 照片区域已调整为一寸照比例布局（110*140圆角框）
-  // 照片请放入 images 文件夹，支持 jpg/png，建议比例 2:3 显示效果最佳
+  // 优秀毕业生数据（前12人，每人配备十余项荣誉/奖项）
   // ============================================================
-  const graduatesData = [
-    { name: "黄俊锋", badge: "国家级奖学金", honors: ["贵州省职业院校技能大赛园林微景观赛项一等奖", "贵州省职业院校技能大赛花艺赛项一等奖"], quote: "毫厘之间见匠心，感谢2314班的严格训练。", destination: "📐 获贵州省水利水电职业技术学院免试入学名额", photo: "huangjunfeng.jpg" },
-    { name: "方思敏", badge: "优秀项目负责人", honors: ["BIM建模省一等奖", "施工组织设计冠军"], quote: "从图纸到落地，班级实训教会我团队协作。", destination: "🏗️ 参与校园实训楼施工管理", photo: "fangsimin.jpg" },
-    { name: "吴泽楷", badge: "安全文明之星", honors: ["安全生产竞赛省冠", "优秀实习生标兵"], quote: "安全是工地的生命线，感谢班级的每日晨会。", destination: "⛑️ 被中天建设评为最佳安全助理", photo: "wuzekai.jpg" },
-    { name: "林诗语", badge: "专升本全省状元", honors: ["国家励志奖学金", "建筑力学满分"], quote: "从砌筑到理论，知识能改变工地未来。", destination: "🎓 被浙江理工大学土木工程录取", photo: "linshiyu.jpg" },
-    { name: "郑浩轩", badge: "创业先锋", honors: ["“建行杯”省银", "装饰装修工艺创新奖"], quote: "课堂学施工，课外跑工地，感恩导师支持。", destination: "创办“青砼建筑服务”", photo: "zhenghaoxuan.jpg" },
-    { name: "陈若溪", badge: "测量组冠军", honors: ["全国测量一等奖", "全站仪操作大师"], quote: "女生也能撑起工地半边天。", destination: "📡 入职省建工集团", photo: "chenruoxi.jpg" },
-    { name: "张子豪", badge: "砌筑冠军", honors: ["全国砌筑大赛二等奖", "校级技能标兵"], quote: "每一块砖都要端正，做人做事亦是如此。", destination: "🧱 签约上海宝冶集团", photo: "" },
-    { name: "李思源", badge: "BIM技术新星", honors: ["全国BIM应用大赛一等奖", "1+X高级证书"], quote: "用数字建造未来，感谢老师带我入门BIM。", destination: "💻 入职中建八局BIM中心", photo: "" },
-    { name: "王浩宇", badge: "测量能手", honors: ["测量国赛二等奖", "优秀实习生"], quote: "精准测量，踏实做人。", destination: "📐 浙江建工集团", photo: "" },
-    { name: "刘子涵", badge: "优秀学生干部", honors: ["省级优秀学生干部", "校三好学生"], quote: "服务同学，锻炼自己。", destination: "🎓 保送本科深造", photo: "" },
-    { name: "陈子轩", badge: "施工仿真金奖", honors: ["施工仿真大赛金奖", "技术能手"], quote: "模拟施工，预见未来。", destination: "🏗️ 中天建设集团", photo: "" },
-    { name: "孙雨桐", badge: "识图标兵", honors: ["建筑识图省一等奖", "CAD认证专家"], quote: "图纸是建筑的语言。", destination: "📋 设计院助理岗", photo: "" },
+  const eliteGraduates = [
+    { 
+      name: "黄俊锋", badge: "国家级奖学金", 
+      honors: ["贵州省职业院校技能大赛园林微景观设计与制作赛项 一等奖", "贵州省职业院校技能大赛花艺赛项 一等奖", "贵州省中等职业学校三好学生", "贵阳市三好学生", "贵阳市职业院校（技工院校）创新创业大赛商业计划评比与路演赛项 一等奖", "贵阳市职业院校（技工院校）创新创业大赛创新创意作品赛项 一等奖", "学校卓越匠心奖学金 一等奖", "全国计算机考试一级 WPS","专业综合排名第二"], 
+      quote: "毫厘之间见匠心，感谢2314班的严格训练。", 
+      destination: "📐 获贵州省水利水电职业技术学院免试入学名额", 
+      photo: "huangjunfeng.jpg" 
+    },
+    { 
+      name: "方思敏", badge: "优秀项目负责人", 
+      honors: ["BIM建模省一等奖", "施工组织设计冠军", "全国建设类院校技能大赛二等奖", "校十佳项目负责人", "广联达认证专家", "施工仿真大赛金奖", "工程管理创新奖", "优秀实习生标兵", "团队协作金奖", "项目管理卓越奖", "省级优秀毕业生候选人", "1+X建筑信息模型高级证书"], 
+      quote: "从图纸到落地，班级实训教会我团队协作。", 
+      destination: "🏗️ 参与校园实训楼施工管理", 
+      photo: "fangsimin.jpg" 
+    },
+    { 
+      name: "吴泽楷", badge: "安全文明之星", 
+      honors: ["安全生产竞赛省冠", "优秀实习生标兵", "省级安全知识竞赛一等奖", "中天建设最佳安全助理", "校安全文明先进个人", "脚手架搭设能手", "安全教育宣讲金牌", "施工现场管理模范", "隐患排查标兵", "实习企业特等奖", "安全员证书(高级)", "安全生产月优秀组织者"], 
+      quote: "安全是工地的生命线，感谢班级的每日晨会。", 
+      destination: "⛑️ 被中天建设评为最佳安全助理", 
+      photo: "wuzekai.jpg" 
+    },
+    { 
+      name: "林诗语", badge: "专升本全省状元", 
+      honors: ["国家励志奖学金", "建筑力学满分", "全省专升本统考状元", "高等数学竞赛一等奖", "结构力学挑战赛金奖", "校学习标兵", "优秀毕业生代表", "力学竞赛省二等奖", "建筑工程识图省金", "土木工程专业奖学金", "优秀学生干部", "综合素质A级证书"], 
+      quote: "从砌筑到理论，知识能改变工地未来。", 
+      destination: "🎓 被浙江理工大学土木工程录取", 
+      photo: "linshiyu.jpg" 
+    },
+    { 
+      name: "郑浩轩", badge: "创业先锋", 
+      honors: ["“建行杯”省银", "装饰装修工艺创新奖", "互联网+大学生创新创业省金奖", "校创业之星", "青年建工杰出代表", "装饰装修技能大赛冠军", "创业计划书特等奖", "产学研优秀项目负责人", "省级创业扶持项目立项", "小微企业创业先锋", "创新方法应用大赛二等奖", "校企合作优秀创业案例"], 
+      quote: "课堂学施工，课外跑工地，感恩导师支持。", 
+      destination: "创办“青砼建筑服务”", 
+      photo: "zhenghaoxuan.jpg" 
+    },
+    { 
+      name: "陈若溪", badge: "测量组冠军", 
+      honors: ["全国测量一等奖", "全站仪操作大师", "省级工程测量团队一等奖", "测绘技能大赛金奖", "无人机测绘创新奖", "优秀测量队长", "巾帼建功标兵", "全国职业院校测量二等奖", "数字化测图能手", "测绘地理信息竞赛一等奖", "南方测绘杯金奖", "优秀实习生(测绘方向)"], 
+      quote: "女生也能撑起工地半边天。", 
+      destination: "📡 入职省建工集团", 
+      photo: "chenruoxi.jpg" 
+    },
+    { 
+      name: "张子豪", badge: "砌筑冠军", 
+      honors: ["全国砌筑大赛二等奖", "校级技能标兵", "砌筑工艺传承金奖", "省级职业技能大赛砌筑三等奖", "优秀技能选手", "实操考核满分状元", "墙体砌筑创新奖", "建筑施工工艺能手", "技能展示周最佳表演奖", "校企合作技能新星", "砌筑工高级证书", "劳动教育模范"], 
+      quote: "每一块砖都要端正，做人做事亦是如此。", 
+      destination: "🧱 签约上海宝冶集团", 
+      photo: "" 
+    },
+    { 
+      name: "李思源", badge: "BIM技术新星", 
+      honors: ["全国BIM应用大赛一等奖", "1+X高级证书", "BIM建模师二级", "数字建造创新奖", "省级BIM技能竞赛金奖", "智慧工地应用案例二等奖", "BIM毕业设计大赛特等奖", "广联达认证BIM5D专家", "建筑信息化先进个人", "虚拟建造创新奖", "全国高校BIM联盟优秀学员", "校企BIM中心技术骨干"], 
+      quote: "用数字建造未来，感谢老师带我入门BIM。", 
+      destination: "💻 入职中建八局BIM中心", 
+      photo: "" 
+    },
+    { 
+      name: "王浩宇", badge: "测量能手", 
+      honors: ["测量国赛二等奖", "优秀实习生", "省级测量团队一等奖", "全站仪操作竞赛金奖", "水准测量精度冠军", "GPS测量应用创新奖", "测绘技能大赛全能奖", "校测量队队长", "野外实训标兵", "数字化成图二等奖", "工程测量员高级证书", "优秀实训报告奖"], 
+      quote: "精准测量，踏实做人。", 
+      destination: "📐 浙江建工集团", 
+      photo: "" 
+    },
+    { 
+      name: "刘子涵", badge: "优秀学生干部", 
+      honors: ["省级优秀学生干部", "校三好学生", "优秀共青团干部", "十佳团支部书记", "学生工作先进个人", "组织管理能力金奖", "校园文化建设贡献奖", "志愿者服务先进个人", "青马工程优秀学员", "党团知识竞赛一等奖", "综合素质标兵", "省级优秀毕业生"], 
+      quote: "服务同学，锻炼自己。", 
+      destination: "🎓 保送本科深造", 
+      photo: "" 
+    },
+    { 
+      name: "陈子轩", badge: "施工仿真金奖", 
+      honors: ["施工仿真大赛金奖", "技术能手", "施工组织设计省一等奖", "虚拟施工创新奖", "项目管理模拟竞赛冠军", "施工进度优化最佳方案奖", "广联达施工仿真认证专家", "施工工艺演示一等奖", "BIM施工模拟二等奖", "优秀技术员", "实习企业技术新星", "装配式施工模拟创新奖"], 
+      quote: "模拟施工，预见未来。", 
+      destination: "🏗️ 中天建设集团", 
+      photo: "" 
+    },
+    { 
+      name: "孙雨桐", badge: "识图标兵", 
+      honors: ["建筑识图省一等奖", "CAD认证专家", "建筑工程制图大赛金奖", "施工图识读竞赛满分", "建筑构造识图特等奖", "CAD技能操作能手", "图学协会优秀会员", "建筑制图创新奖", "BIM识图建模二等奖", "优秀绘图员", "识图实训标兵", "专业基础扎实奖"], 
+      quote: "图纸是建筑的语言。", 
+      destination: "📋 设计院助理岗", 
+      photo: "" 
+    }
+  ];
+
+  // ============================================================
+  // 其余优秀毕业生数据（37人，保持原有简洁样式）
+  // ============================================================
+  const normalGraduates = [
     { name: "马一鸣", badge: "安全标兵", honors: ["安全知识竞赛冠军", "安全员证书"], quote: "安全第一，预防为主。", destination: "⛑️ 项目安全主管储备", photo: "" },
     { name: "朱子玉", badge: "造价新星", honors: ["广联达认证专家", "预算省二等奖"], quote: "精打细算，毫厘必争。", destination: "💰 造价咨询公司", photo: "" },
     { name: "沈佳怡", badge: "设计新秀", honors: ["室内设计省银", "创意设计奖"], quote: "设计让建筑更有温度。", destination: "🎨 装饰公司设计师", photo: "" },
@@ -441,59 +566,59 @@
     { name: "文子琪", badge: "学习标兵", honors: ["班级学习标兵", "国企录取"], quote: "学无止境，筑梦未来。", destination: "🏗️ 国企录取", photo: "" }
   ];
 
-  // 渲染所有卡片（布局已根据一寸照优化）
-  const gridContainer = document.getElementById('graduatesGrid');
-  
-  function renderCards() {
-    gridContainer.innerHTML = '';
+  // 通用卡片渲染函数（isElite 决定是否使用 elite-card 样式和双列网格）
+  function renderCard(student, isElite = false) {
+    const card = document.createElement('div');
+    card.className = `card ${isElite ? 'elite-card' : ''}`;
     
-    graduatesData.forEach(student => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      
-      // 照片区域 — 按照一寸照专用容器包裹，保持比例
-      let photoContent = '';
-      if (student.photo && student.photo.trim() !== '') {
-        photoContent = `<img class="student-img" src="images/${student.photo}" alt="${student.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'no-photo-placeholder\'>📷<br><span>${student.name}</span></div>'">`;
-      } else {
-        photoContent = `<div class="no-photo-placeholder">👷<br><span>${student.name}</span></div>`;
-      }
-      
-      // 荣誉标签生成
-      let honorsHtml = '';
-      student.honors.forEach(honor => {
-        honorsHtml += `<span class="honor-tag">${honor}</span>`;
-      });
-      
-      // 卡片完整HTML — 采用一寸照专用布局容器 .photo-wrapper
-      card.innerHTML = `
-        <div class="card-photo">
-          <div class="photo-wrapper">
-            ${photoContent}
-          </div>
-        </div>
-        <div class="card-content">
-          <div class="graduate-name">
-            ${student.name}
-            <small>${student.badge}</small>
-          </div>
-          <div class="honor-list">
-            ${honorsHtml}
-          </div>
-          <div class="quote">
-            <i>“${student.quote}”</i>
-          </div>
-          <div class="badge-year">
-            ${student.destination}
-          </div>
-        </div>
-      `;
-      
-      gridContainer.appendChild(card);
+    let photoContent = '';
+    if (student.photo && student.photo.trim() !== '') {
+      photoContent = `<img class="student-img" src="images/${student.photo}" alt="${student.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'no-photo-placeholder\'>📷<br><span>${student.name}</span></div>'">`;
+    } else {
+      photoContent = `<div class="no-photo-placeholder">👷<br><span>${student.name}</span></div>`;
+    }
+    
+    let honorsHtml = '';
+    student.honors.forEach(honor => {
+      honorsHtml += `<span class="honor-tag">${honor}</span>`;
     });
+    
+    card.innerHTML = `
+      <div class="card-photo">
+        <div class="photo-wrapper">
+          ${photoContent}
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="graduate-name">
+          ${student.name}
+          <small>${student.badge}</small>
+        </div>
+        <div class="honor-list">
+          ${honorsHtml}
+        </div>
+        <div class="quote">
+          <i>“${student.quote}”</i>
+        </div>
+        <div class="badge-year">
+          ${student.destination}
+        </div>
+      </div>
+    `;
+    return card;
   }
-  
-  renderCards();
+
+  // 渲染优秀毕业生标兵（12人）
+  const eliteContainer = document.getElementById('eliteGrid');
+  eliteGraduates.forEach(student => {
+    eliteContainer.appendChild(renderCard(student, true));
+  });
+
+  // 渲染其余优秀毕业生（37人）
+  const normalContainer = document.getElementById('normalGrid');
+  normalGraduates.forEach(student => {
+    normalContainer.appendChild(renderCard(student, false));
+  });
 </script>
 </body>
 </html>
