@@ -122,7 +122,7 @@
     /* 网格卡片 - 针对一寸照优化布局 */
     .graduates-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
       gap: 2rem;
       margin: 1rem 0 2rem;
     }
@@ -221,11 +221,17 @@
       border-radius: 30px;
     }
 
+    /* 卡片内容区 - 使用 flex 布局，将底部区域（quote + destination）整体推到底部 */
     .card-content {
-      padding: 0.8rem 1.5rem 1.8rem;
+      padding: 0.8rem 1.5rem 1.5rem;
       flex: 1;
       display: flex;
       flex-direction: column;
+    }
+
+    /* 占满剩余空间的内容包装器，让底部区域始终在最下方 */
+    .card-top-info {
+      flex: 1;
     }
 
     .graduate-name {
@@ -269,26 +275,59 @@
       gap: 0.3rem;
     }
 
+    /* ========== 底部固定区域容器 ========== */
+    .bottom-fixed-area {
+      margin-top: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========== quote 区域 - 在 destination 上方 ========== */
     .quote {
       background: #fef8f0;
-      padding: 0.7rem 0.9rem;
+      padding: 0.8rem 1rem;
       border-radius: 1rem;
-      margin: 0.5rem 0;
+      margin: 0.2rem 0 0.4rem 0;
       border-left: 4px solid #c97736;
       font-size: 0.85rem;
       color: #3a2a1e;
-      flex: 1;
+      line-height: 1.5;
+      min-height: 90px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    .quote i {
+      display: block;
+      width: 100%;
     }
 
+    /* ========== destination 区域 - 在 quote 下方，卡片最底部 ========== */
     .badge-year {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       background: #e9e1d6;
-      border-radius: 30px;
-      padding: 0.3rem 0.8rem;
-      display: inline-block;
-      margin-top: 0.5rem;
+      border-radius: 40px;
+      padding: 0.4rem 1rem;
       text-align: center;
-      font-weight: 500;
+      font-weight: 600;
+      color: #7b491f;
+      width: 100%;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+      border: 1px solid #dbbc92;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .card:hover .badge-year {
+      background: #e1cfb8;
+      border-color: #c9a16e;
     }
 
     /* 班级风采区域 */
@@ -354,6 +393,16 @@
       }
       .card.elite-card .honor-list {
         grid-template-columns: 1fr;
+      }
+      .quote {
+        min-height: 75px;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
+      }
+      .badge-year {
+        font-size: 0.68rem;
+        padding: 0.35rem 0.8rem;
+        min-height: 44px;
       }
     }
   </style>
@@ -453,14 +502,14 @@
     },
     { 
       name: "王华蒴", badge: "学生", 
-      honors: ["中等职业教育国家奖学金"," 2025年世界职业院校技能大赛总决赛争夺赛艺术设计赛道银奖", "2025年贵州省职业院校技能大赛暨世界职业院校技能大赛贵州省选拔赛一等奖", "贵州省中等职业学校优秀毕业生","2024年贵阳市职业院校（技工院校）创新创业大赛商业计划评比与路演赛项 一等奖",  "贵阳市三号学生（高中组）"], 
+      honors: ["中等职业教育国家奖学金"," 2025年世界职业院校技能大赛总决赛争夺赛艺术设计赛道银奖", "2025年贵州省职业院校技能大赛暨世界职业院校技能大赛贵州省选拔赛一等奖", "贵州省中等职业学校优秀毕业生","2024年贵阳市职业院校（技工院校）创新创业大赛商业计划评比与路演赛项 一等奖", "贵阳市三号学生（高中组）"], 
       quote: "以后别对不起人就好", 
       destination: "⛑️  获贵州省轻工职业大学免试入学名额", 
-      photo: "wuzekai.jpg" 
+      photo: "wanghuashuo.jpg" 
     },
     { 
       name: "田翔云", badge: "团支书", 
-      honors: ["2025年贵州省职业院校技能大赛工程测量赛项二等奖","2025年贵州技能大赛暨第二届数字经济行业技能应用竞赛建筑信息模型技术员（学生组）赛项 三等奖",  "2025年贵州省职业院校技能大赛土木建筑设计与管理赛道 三等奖", "2024年贵州省职业技能大赛暨BIM技能大赛优秀奖", "贵州省中等职业学校三好学生", "贵州省中等职业学校优秀毕业生","2025年获贵阳市职业院校（技工院校）技能大赛工程测量赛项 二等奖","2025年获贵阳市职业院校（技工院校）技能大赛土木建筑设计与管理赛道 二等奖", "2024年贵阳市廉洁教育主题征文竞赛（高中组）三等奖", "贵阳市三好学生（高中组）", "学校卓越匠心奖学金 二等奖", "学校优秀共青团员荣誉证书","国家普通话技能等级证书 二乙", "全国计算机考试一级 MS","建筑信息模型技术员职业技能等级证书-中级","专业综合排名第三"], 
+      honors: ["2025年贵州省职业院校技能大赛工程测量赛项二等奖","2025年贵州技能大赛暨第二届数字经济行业技能应用竞赛建筑信息模型技术员（学生组）赛项 三等奖", "2025年贵州省职业院校技能大赛土木建筑设计与管理赛道 三等奖", "2024年贵州省职业技能大赛暨BIM技能大赛优秀奖", "贵州省中等职业学校三好学生", "贵州省中等职业学校优秀毕业生","2025年获贵阳市职业院校（技工院校）技能大赛工程测量赛项 二等奖","2025年获贵阳市职业院校（技工院校）技能大赛土木建筑设计与管理赛道 二等奖", "2024年贵阳市廉洁教育主题征文竞赛（高中组）三等奖", "贵阳市三好学生（高中组）", "学校卓越匠心奖学金 二等奖", "学校优秀共青团员荣誉证书","国家普通话技能等级证书 二乙", "全国计算机考试一级 MS","建筑信息模型技术员职业技能等级证书-中级","专业综合排名第三"], 
       quote: "青春跌跌撞撞，所有经历都是馈赠", 
       destination: "🎓 获贵州省建设职业技术学院免试入学名额", 
       photo: "tianxiangyun.jpg" 
@@ -469,57 +518,57 @@
       name: "李浩宇", badge: "学生", 
       honors: ["2025年贵州省职业院校技能大赛电子商务赛项二等奖", "2025年贵阳市职业院校（技工院校）技能大赛电子商务赛项 三等奖", "2023年贵阳市职业院校（技工院校）创新创业大赛商业计划评比与路演赛项 三等奖", "2025年学校技能大赛电子商务赛项二等奖"], 
       quote: "时间过得很快好好珍惜眼前每一个瞬间", 
-      destination: "获贵州省职业技术学院免试入学名额”", 
+      destination: "获贵州省职业技术学院免试入学名额", 
       photo: "lihaoyu.jpg" 
     },
     { 
       name: "罗志颖", badge: "学生", 
-      honors: ["2025年贵州省职业院校技能大赛苗绣技艺赛项二等奖", "贵州省中等职业学校优秀毕业生", " 2024年贵阳市职业院校（技工院校）创新创业大赛创新创意赛项三等奖", "贵阳市三好学生（高中组）", "学校优秀共青团员荣誉证书", "2025年抽刺绣工职业--工种三级职业技能证书" ], 
-      quote: "女生也能撑起工地半边天。", 
-      destination: "📡 入职省建工集团", 
-      photo: "chenruoxi.jpg" 
+      honors: ["2025年贵州省职业院校技能大赛苗绣技艺赛项二等奖", "贵州省中等职业学校优秀毕业生", " 2024年贵阳市职业院校（技工院校）创新创业大赛创新创意赛项三等奖", "贵阳市三好学生（高中组）", "学校优秀共青团员荣誉证书", "2025年抽刺绣工职业--工种三级职业技能证书"], 
+      quote: "苦尽甘来终有时 一路向阳待花朝", 
+      destination: "📡  获贵州省轻工职业大学免试入学名额", 
+      photo: "luozhiying.jpg" 
     },
     { 
-      name: "熊懿", badge: "砌筑冠军", 
-      honors: ["全国砌筑大赛二等奖", "校级技能标兵", "砌筑工艺传承金奖", "省级职业技能大赛砌筑三等奖", "优秀技能选手", "实操考核满分状元", "墙体砌筑创新奖", "建筑施工工艺能手", "技能展示周最佳表演奖", "校企合作技能新星", "砌筑工高级证书", "劳动教育模范"], 
-      quote: "每一块砖都要端正，做人做事亦是如此。", 
-      destination: "🧱 签约上海宝冶集团", 
-      photo: "" 
+      name: "熊懿", badge: "生活委员", 
+      honors: ["2025年贵州省职业院校技能大赛工程测量赛项二等奖", "2025年获贵阳市职业院校（技工院校）技能大赛工程测量赛项 二等奖", "贵州省中等职业学校优秀毕业生", "学校优秀共青团干荣誉证书", "国家普通话技能等级证书 二乙"], 
+      quote: "好好加油 未来的路是属于你自己的！", 
+      destination: "🧱 获贵州省交通职业大学免试入学名额", 
+      photo: "xiongyi.jpg" 
     },
     { 
-      name: "陈嘉祺", badge: "BIM技术新星", 
-      honors: ["全国BIM应用大赛一等奖", "1+X高级证书", "BIM建模师二级", "数字建造创新奖", "省级BIM技能竞赛金奖", "智慧工地应用案例二等奖", "BIM毕业设计大赛特等奖", "广联达认证BIM5D专家", "建筑信息化先进个人", "虚拟建造创新奖", "全国高校BIM联盟优秀学员", "校企BIM中心技术骨干"], 
-      quote: "用数字建造未来，感谢老师带我入门BIM。", 
-      destination: "💻 入职中建八局BIM中心", 
-      photo: "" 
+      name: "陈嘉祺", badge: "学生", 
+      honors: ["2025年贵州省职业院校技能大赛工程测量赛项二等奖", "2025年获贵阳市职业院校（技工院校）技能大赛工程测量赛项 二等奖", "贵州省中等职业学校优秀毕业生", "贵阳市三好学生（高中组）", "国家普通话技能等级证书 二乙"], 
+      quote: "愿永远保有少年赤诚，不惧挫折与迷茫，认真奔赴每一份热爱。把遗憾化作阅历，把努力凝成光亮，不念过往困顿，不畏前路风霜，在最好的年纪活成自己喜欢的模样。", 
+      destination: "💻 获贵州省交通职业大学免试入学名额", 
+      photo: "chenjiaqi.jpg" 
     },
     { 
-      name: "郭德强", badge: "测量能手", 
-      honors: ["测量国赛二等奖", "优秀实习生", "省级测量团队一等奖", "全站仪操作竞赛金奖", "水准测量精度冠军", "GPS测量应用创新奖", "测绘技能大赛全能奖", "校测量队队长", "野外实训标兵", "数字化成图二等奖", "工程测量员高级证书", "优秀实训报告奖"], 
-      quote: "精准测量，踏实做人。", 
-      destination: "📐 浙江建工集团", 
-      photo: "" 
+      name: "郭德强", badge: "宣传委员", 
+      honors: ["2025年贵州省职业院校技能大赛工程测量赛项二等奖", "2025年获贵阳市职业院校（技工院校）技能大赛工程测量赛项 二等奖", "学校优秀共青团员荣誉证书", "国家普通话技能等级证书 三甲"], 
+      quote: "我的青春没有后悔", 
+      destination: "📐 获贵州省交通职业大学免试入学名额", 
+      photo: "guodeqiang.jpg" 
     },
     { 
-      name: "张礽槊", badge: "优秀学生干部", 
-      honors: ["省级优秀学生干部", "校三好学生", "优秀共青团干部", "十佳团支部书记", "学生工作先进个人", "组织管理能力金奖", "校园文化建设贡献奖", "志愿者服务先进个人", "青马工程优秀学员", "党团知识竞赛一等奖", "综合素质标兵", "省级优秀毕业生"], 
-      quote: "服务同学，锻炼自己。", 
-      destination: "🎓 保送本科深造", 
-      photo: "" 
+      name: "张礽槊", badge: "学生 ", 
+      honors: ["2025年3月获贵阳市职业院校（技工院校）技能大赛园林微景赛项 一等奖", "2024年贵阳市职业院校（技工院校）创新创业大赛商业计划评比与路演赛项 一等奖 ", "国家普通话技能等级证书 二乙"], 
+      quote: "读不了万卷书 那就行万里路", 
+      destination: "🎓 升学贵阳职业技术学院", 
+      photo: "zhangrengshuo.jpg" 
     },
     { 
-      name: "熊光钦", badge: "施工仿真金奖", 
-      honors: ["施工仿真大赛金奖", "技术能手", "施工组织设计省一等奖", "虚拟施工创新奖", "项目管理模拟竞赛冠军", "施工进度优化最佳方案奖", "广联达施工仿真认证专家", "施工工艺演示一等奖", "BIM施工模拟二等奖", "优秀技术员", "实习企业技术新星", "装配式施工模拟创新奖"], 
-      quote: "模拟施工，预见未来。", 
-      destination: "🏗️ 中天建设集团", 
-      photo: "" 
+      name: "熊光钦", badge: "体育委员", 
+      honors: ["2024年贵阳市职业院校（技工院校）创新创业大赛商业计划评比与路演赛项 一等奖"], 
+      quote: "努力向前", 
+      destination: "🏗️ 升学贵州建设职业技术学院", 
+      photo: "xiongguangqin.jpg" 
     },
     { 
-      name: "晏羽杰", badge: "识图标兵", 
-      honors: ["建筑识图省一等奖", "CAD认证专家", "建筑工程制图大赛金奖", "施工图识读竞赛满分", "建筑构造识图特等奖", "CAD技能操作能手", "图学协会优秀会员", "建筑制图创新奖", "BIM识图建模二等奖", "优秀绘图员", "识图实训标兵", "专业基础扎实奖"], 
+      name: "晏羽杰", badge: "学习委员", 
+      honors: ["2025年3月获贵阳市职业院校（技工院校）技能大赛美术造型赛项 二等奖", "CAD认证专家", "建筑工程制图大赛金奖", "施工图识读竞赛满分", "建筑构造识图特等奖", "CAD技能操作能手", "图学协会优秀会员", "建筑制图创新奖", "BIM识图建模二等奖", "优秀绘图员", "识图实训标兵", "专业基础扎实奖"], 
       quote: "图纸是建筑的语言。", 
       destination: "📋 设计院助理岗", 
-      photo: "" 
+      photo: "chenjiaqi.jpg" 
     }
   ];
 
@@ -583,6 +632,7 @@
       honorsHtml += `<span class="honor-tag">${honor}</span>`;
     });
     
+    // 结构：顶部信息区域 + 底部固定区域（quote 在上，destination 在下）
     card.innerHTML = `
       <div class="card-photo">
         <div class="photo-wrapper">
@@ -590,18 +640,22 @@
         </div>
       </div>
       <div class="card-content">
-        <div class="graduate-name">
-          ${student.name}
-          <small>${student.badge}</small>
+        <div class="card-top-info">
+          <div class="graduate-name">
+            ${student.name}
+            <small>${student.badge}</small>
+          </div>
+          <div class="honor-list">
+            ${honorsHtml}
+          </div>
         </div>
-        <div class="honor-list">
-          ${honorsHtml}
-        </div>
-        <div class="quote">
-          <i>“${student.quote}”</i>
-        </div>
-        <div class="badge-year">
-          ${student.destination}
+        <div class="bottom-fixed-area">
+          <div class="quote">
+            <i>“${student.quote}”</i>
+          </div>
+          <div class="badge-year">
+            📍 ${student.destination}
+          </div>
         </div>
       </div>
     `;
